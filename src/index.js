@@ -1,22 +1,6 @@
-const capitalize = s => `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+const domTestingLib = require("@testing-library/dom");
+const { enhanceQueries } = require("./enhance-queries");
 
-module.exports = {
-  enhanceQueries: queries => {
-    const buildApiAccessor = api => ({ filter, params = [] } = {}) => {
-      const fnName = `${api}By${capitalize(filter)}`;
-      const fn = queries[fnName];
-      if (!fn) {
-        throw new Error(`Unsupported filter: ${filter}`);
-      }
+domTestingLib.screen = enhanceQueries(screen);
 
-      return queries[fnName](...params);
-    };
-
-    return {
-      ...queries,
-      get: buildApiAccessor("get"),
-      query: buildApiAccessor("query"),
-      find: buildApiAccessor("find")
-    };
-  }
-};
+module.exports = { enhanceQueries };
