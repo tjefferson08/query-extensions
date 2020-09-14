@@ -2,7 +2,7 @@
   "name": "query-extensions",
   "version": "0.0.1",
   "description": "Extensions to the core @testing-library query API",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest"
   },
@@ -23,5 +23,13 @@
   "bugs": {
     "url": "https://github.com/tjefferson08/query-extensions/issues"
   },
-  "homepage": "https://github.com/tjefferson08/query-extensions#readme"
+  "homepage": "https://github.com/tjefferson08/query-extensions#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@testing-library/dom": "^7.24.2",
+    "@testing-library/jest-dom": "^5.11.4"
+  },
+  "peerDependencies": {
+    "@testing-library/dom": "^7.24.2"
+  }
 }
