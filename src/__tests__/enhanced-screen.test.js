@@ -33,3 +33,11 @@ test("enhanced queries can reuse data for any of get/query/find query types", as
   expect(() => enhancedQueries.get(logoData)).toThrow(/unable to find/i);
   expect(enhancedQueries.query(logoData)).toBeNull();
 });
+
+test("using unsupported filter / API will throw", () => {
+  const enhancedQueries = enhanceQueries(screen);
+
+  expect(() => enhancedQueries.get({ filter: "unavailable thing" })).toThrow(
+    /unsupported filter: unavailable thing/i
+  );
+});

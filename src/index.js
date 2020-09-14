@@ -2,7 +2,7 @@ const capitalize = s => `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
 
 module.exports = {
   enhanceQueries: queries => {
-    const buildApiAccessor = api => ({ filter, params } = {}) => {
+    const buildApiAccessor = api => ({ filter, params = [] } = {}) => {
       const fnName = `${api}By${capitalize(filter)}`;
       const fn = queries[fnName];
       if (!fn) {
