@@ -1,10 +1,6 @@
-const domTestingLib = require("@testing-library/dom");
+const { screen } = require("@testing-library/dom");
 const { enhanceQueries } = require("./enhance-queries");
 
-domTestingLib.screen = enhanceQueries(screen);
+const enhancedScreen = enhanceQueries(screen);
 
-const install = () => {
-  domTestingLib.screen = enhanceQueries(screen);
-};
-
-module.exports = { enhanceQueries, install };
+module.exports = { enhanceQueries, screen: enhancedScreen };
