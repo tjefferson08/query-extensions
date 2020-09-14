@@ -1,0 +1,27 @@
+{
+  "name": "query-extensions",
+  "version": "0.0.1",
+  "description": "Extensions to the core @testing-library query API",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjefferson08/query-extensions.git"
+  },
+  "keywords": [
+    "testing-library",
+    "queries",
+    "extensions",
+    "get",
+    "find",
+    "query"
+  ],
+  "author": "Travis Jefferson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tjefferson08/query-extensions/issues"
+  },
+  "homepage": "https://github.com/tjefferson08/query-extensions#readme"
+}
