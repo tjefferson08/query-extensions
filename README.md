@@ -9,6 +9,70 @@ npm install query-extensions
 yarn add query-extensions
 ```
 
+# Motivation
+Here's the reason this package exists:
+```js
+import { screen } from "query-extensions";
+import { fireEvent } from "@testing-library/react";
+// ... more imports
+
+test("the standard screen queries work nicely for the majority of cases", async () => {
+  render(<YourComponent />);
+
+  // standard queries are available
+  // component starts in loading state
+  const loadingEl = screen.getByText("Loading...");
+  expect(loadingEl).toBeInTheDocument();
+
+  // loads up an email input, loading disappears
+  const emailInput = await screen.findByLabelText("Your email");
+  expect(screen.queryByText("Loading...")).toBeNull();
+
+  // fill out email and click to sign up
+  fireEvent.change(emailInput, { target: { value: "email@example.com" } });
+  fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
+
+  // success modal pops up and takes over component (hiding other content)
+  await screen.findByRole("img", { name: "celebration" });
+  expect(screen.queryByLabelText("Your email")).toBeNull();
+  expect(screen.queryByRole("button", { name: /sign up/i })).toBeNull();
+});
+
+test("enhanced can help us write something more maintainable", async () => {
+  const ui = {
+    successIcon: { filter: "role", params: ["img", { name: "celebration" }] },
+    signUpBtn: { filter: "role", params: ["button", { name: /sign up/i }] },
+    emailInput: { filter: "labelText", params: ["Your email"] },
+    loading: { filter: "text", params: ["Loading..."] }
+  };
+
+  render(<YourComponent />);
+
+  // component starts in loading state
+  expect(screen.get(ui.loading)).toBeInTheDocument();
+
+  // loads up an email input, loading disappears
+  const emailInput = await screen.find(ui.emailInput);
+  expect(screen.query(ui.loading)).toBeNull();
+
+  // fill out email and click to sign up
+  fireEvent.change(emailInput, { target: { value: "email@example.com" } });
+  fireEvent.click(screen.get(ui.signUpBtn));
+
+  // success modal pops up and takes over component (hiding other content)
+  await screen.find(ui.successIcon);
+  expect(screen.query(ui.emailInput)).toBeNull();
+  expect(screen.query(ui.signUpBtn)).toBeNull();
+});
+```
+
+If that (contrived) example doesn't sell you outright, consider a couple of
+"maintenance" scenarios. What happens to each test (or a _much_ bigger, more
+hypothetical test suite) if:
+
+1) A UI element goes from rendering sync to async (or vice versa)
+2) A UI element has a text/markup/label change which requires a different query
+
 # Usage
 
 There's a handy, pre-built `screen` object available for direct use
