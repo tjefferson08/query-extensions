@@ -38,7 +38,7 @@ test("the standard screen queries work nicely for the majority of cases", async 
   expect(screen.queryByRole("button", { name: /sign up/i })).toBeNull();
 });
 
-test("enhanced can help us write something more maintainable", async () => {
+test("the query extensions API can help us write something more readable and maintainable", async () => {
   const ui = {
     successIcon: { filter: "role", params: ["img", { name: "celebration" }] },
     signUpBtn: { filter: "role", params: ["button", { name: /sign up/i }] },
@@ -65,6 +65,9 @@ test("enhanced can help us write something more maintainable", async () => {
   expect(screen.query(ui.signUpBtn)).toBeNull();
 });
 ```
+
+TL;DR wouldn't it be nice to reuse your querying configs without coupling to a
+particular flavor of get/query/find?
 
 If that (contrived) example doesn't sell you outright, consider a couple of
 "maintenance" scenarios. What happens to each test (or a _much_ bigger, more
@@ -96,6 +99,7 @@ You can also enhance any query objects you like using `enhanceQueries`
 
 ```js
 import { render } from '@testing-library/react';
+import { enhanceQueries } from 'query-extensions';
 // ... more imports
 
 test('your actual test', () => {
