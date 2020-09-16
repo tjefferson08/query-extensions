@@ -1,5 +1,4 @@
-const { screen } = require("@testing-library/dom");
-const { enhanceQueries } = require("../index");
+const { enhanceQueries, screen, within } = require("../index");
 
 const renderIntoDocument = html => {
   const container = document.createElement("div");
@@ -18,20 +17,17 @@ test("enhanced queries can reuse data for any of get/query/find query types", as
     '<img src="/path/to/logo.png" alt="logo"/>'
   );
 
-  const enhancedQueries = enhanceQueries(screen);
   const logoData = { filter: "role", params: ["img", { name: "logo" }] };
 
-  await expect(enhancedQueries.find(logoData)).resolves.toBeTruthy();
-  expect(enhancedQueries.get(logoData)).toBeTruthy();
-  expect(enhancedQueries.query(logoData)).toBeTruthy();
+  await expect(screen.find(logoData)).resolves.toBeTruthy();
+  expect(screen.get(logoData)).toBeTruthy();
+  expect(screen.query(logoData)).toBeTruthy();
 
   unmount();
 
-  await expect(enhancedQueries.find(logoData)).rejects.toThrow(
-    /unable to find/i
-  );
-  expect(() => enhancedQueries.get(logoData)).toThrow(/unable to find/i);
-  expect(enhancedQueries.query(logoData)).toBeNull();
+  await expect(screen.find(logoData)).rejects.toThrow(/unable to find/i);
+  expect(() => screen.get(logoData)).toThrow(/unable to find/i);
+  expect(screen.query(logoData)).toBeNull();
 });
 
 test("enhanced queries can reuse data for any of getAll/queryAll/findAll query types", async () => {
@@ -43,26 +39,41 @@ test("enhanced queries can reuse data for any of getAll/queryAll/findAll query t
      </ul>`
   );
 
-  const enhancedQueries = enhanceQueries(screen);
   const liData = { filter: "role", params: ["listitem"] };
 
-  await expect(enhancedQueries.findAll(liData)).resolves.toHaveLength(3);
-  expect(enhancedQueries.getAll(liData)).toHaveLength(3);
-  expect(enhancedQueries.queryAll(liData)).toHaveLength(3);
+  await expect(screen.findAll(liData)).resolves.toHaveLength(3);
+  expect(screen.getAll(liData)).toHaveLength(3);
+  expect(screen.queryAll(liData)).toHaveLength(3);
 
   unmount();
 
-  await expect(enhancedQueries.findAll(liData)).rejects.toThrow(
-    /unable to find/i
+  await expect(screen.findAll(liData)).rejects.toThrow(/unable to find/i);
+  expect(() => screen.getAll(liData)).toThrow(/unable to find/i);
+  expect(screen.queryAll(liData)).toEqual([]);
+});
+
+test("enhanced queries can provide within property to scope query", async () => {
+  const { unmount } = renderIntoDocument(
+    `<form>
+       <button>OK</button>
+     </form>
+     <div role="dialog">
+       <button>OK</button>
+     </div>`
   );
-  expect(() => enhancedQueries.getAll(liData)).toThrow(/unable to find/i);
-  expect(enhancedQueries.queryAll(liData)).toEqual([]);
+
+  const okBtnData = { filter: "role", params: ["button", { name: "OK" }] };
+  const dialogData = { filter: "role", params: ["dialog"] };
+
+  // querying for OK button should yield two results
+  expect(screen.getAll(okBtnData)).toHaveLength(2);
+
+  // scoping with `within` should limit to single result
+  expect(within(screen.get(dialogData)).get(okBtnData)).toBeTruthy();
 });
 
 test("using unsupported filter / API will throw", () => {
-  const enhancedQueries = enhanceQueries(screen);
-
-  expect(() => enhancedQueries.get({ filter: "unavailable thing" })).toThrow(
+  expect(() => screen.get({ filter: "unavailable thing" })).toThrow(
     /unsupported filter: unavailable thing/i
   );
 });

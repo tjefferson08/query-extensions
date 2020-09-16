@@ -1,6 +1,9 @@
-const { screen } = require("@testing-library/dom");
+const { screen } = require("./screen");
+const { within } = require("./within");
 const { enhanceQueries } = require("./enhance-queries");
 
-const enhancedScreen = enhanceQueries(screen);
-
-module.exports = { enhanceQueries, screen: enhancedScreen };
+module.exports = {
+  enhanceQueries,
+  screen,
+  within
+};
