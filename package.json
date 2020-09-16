@@ -1,6 +1,6 @@
 {
   "name": "query-extensions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extensions to the core @testing-library query API",
   "main": "src/index.js",
   "scripts": {
