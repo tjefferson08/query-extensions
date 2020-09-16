@@ -1,6 +1,9 @@
 # query-extensions
 Extensions for core @testing-library queries
 
+[Kent & Travis briefly discuss](https://youtu.be/FdO2cphSH9Y?t=772) during one
+of Kent's helpful office hours sessions
+
 # Install
 ```sh
 npm install query-extensions
