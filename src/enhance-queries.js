@@ -15,8 +15,11 @@ module.exports = {
     return {
       ...queries,
       get: buildApiAccessor("get"),
+      getAll: buildApiAccessor("getAll"),
       query: buildApiAccessor("query"),
-      find: buildApiAccessor("find")
+      queryAll: buildApiAccessor("queryAll"),
+      find: buildApiAccessor("find"),
+      findAll: buildApiAccessor("findAll")
     };
   }
 };

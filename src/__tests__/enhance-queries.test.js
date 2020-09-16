@@ -34,6 +34,31 @@ test("enhanced queries can reuse data for any of get/query/find query types", as
   expect(enhancedQueries.query(logoData)).toBeNull();
 });
 
+test("enhanced queries can reuse data for any of getAll/queryAll/findAll query types", async () => {
+  const { unmount } = renderIntoDocument(
+    `<ul>
+       <li>one</li>
+       <li>two</li>
+       <li>three</li>
+     </ul>`
+  );
+
+  const enhancedQueries = enhanceQueries(screen);
+  const liData = { filter: "role", params: ["listitem"] };
+
+  await expect(enhancedQueries.findAll(liData)).resolves.toHaveLength(3);
+  expect(enhancedQueries.getAll(liData)).toHaveLength(3);
+  expect(enhancedQueries.queryAll(liData)).toHaveLength(3);
+
+  unmount();
+
+  await expect(enhancedQueries.findAll(liData)).rejects.toThrow(
+    /unable to find/i
+  );
+  expect(() => enhancedQueries.getAll(liData)).toThrow(/unable to find/i);
+  expect(enhancedQueries.queryAll(liData)).toEqual([]);
+});
+
 test("using unsupported filter / API will throw", () => {
   const enhancedQueries = enhanceQueries(screen);
 
