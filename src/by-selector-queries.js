@@ -6,8 +6,9 @@ const getMultipleError = (c, selector) =>
 const getMissingError = (c, selector) =>
   `Unable to find an element with the selector text: ${selector}`;
 
-const queryAllBySelector = (container, selector) =>
-  container.querySelectorAll(selector);
+const queryAllBySelector = (container, selector) => [
+  ...container.querySelectorAll(selector)
+];
 
 const [
   queryBySelector,
