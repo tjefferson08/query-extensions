@@ -1,4 +1,4 @@
-const { enhanceQueries, screen, within } = require("../index");
+const { screen, within } = require("../index");
 const { renderIntoDocument } = require("../../test/utils");
 
 test("enhanced queries can reuse data for any of get/query/find query types", async () => {
@@ -41,7 +41,25 @@ test("enhanced queries can reuse data for any of getAll/queryAll/findAll query t
   expect(screen.queryAll(liData)).toEqual([]);
 });
 
-test("enhanced queries can provide within property to scope query", async () => {
+test("higher-level API should be able to leverage custom queries", async () => {
+  const { unmount } = renderIntoDocument(
+    '<img class="company-logo" src="/path/to/logo.png" alt="logo"/>'
+  );
+
+  const logoData = { filter: "selector", params: [".company-logo"] };
+
+  await expect(screen.find(logoData)).resolves.toBeTruthy();
+  expect(screen.get(logoData)).toBeTruthy();
+  expect(screen.query(logoData)).toBeTruthy();
+
+  unmount();
+
+  await expect(screen.find(logoData)).rejects.toThrow(/unable to find/i);
+  expect(() => screen.get(logoData)).toThrow(/unable to find/i);
+  expect(screen.query(logoData)).toBeNull();
+});
+
+test("within is extended to return enhanced query bundle", async () => {
   const { unmount } = renderIntoDocument(
     `<form>
        <button>OK</button>
