@@ -79,6 +79,37 @@ test("within is extended to return enhanced query bundle", async () => {
   expect(within(screen.get(dialogData)).get(okBtnData)).toBeTruthy();
 });
 
+test("within can also access custom queries with/without higher level API", async () => {
+  const { unmount } = renderIntoDocument(
+    `<form id="main-form">
+       <button class="ok-btn">OK</button>
+     </form>
+     <div class="modal-dialog">
+       <button class="ok-btn">OK</button>
+     </div>`
+  );
+
+  const okBtnData = { filter: "selector", params: [".ok-btn"] };
+  const dialogData = { filter: "selector", params: [".modal-dialog"] };
+  const formData = { filter: "selector", params: ["#main-form"] };
+
+  // querying for OK button should yield two results
+  expect(screen.getAll(okBtnData)).toHaveLength(2);
+  expect(screen.getAllBySelector(".ok-btn")).toHaveLength(2);
+
+  // scoping with `within` should limit to single result
+  expect(within(screen.get(dialogData)).get(okBtnData)).toBeTruthy();
+  expect(
+    within(screen.getBySelector(".modal-dialog")).getBySelector(".ok-btn")
+  ).toBeTruthy();
+
+  // should also be able to scope within form element instead
+  expect(within(screen.get(formData)).get(okBtnData)).toBeTruthy();
+  expect(
+    within(screen.getBySelector("#main-form")).getBySelector(".ok-btn")
+  ).toBeTruthy();
+});
+
 test("using unsupported filter / API will throw", () => {
   expect(() => screen.get({ filter: "unavailable thing" })).toThrow(
     /unsupported filter: unavailable thing/i
