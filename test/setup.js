@@ -1,0 +1,3 @@
+afterEach(() => {
+  document.body.innerHTML = "";
+});

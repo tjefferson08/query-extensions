@@ -1,16 +1,5 @@
 const { enhanceQueries, screen, within } = require("../index");
-
-const renderIntoDocument = html => {
-  const container = document.createElement("div");
-  container.id = "render-container";
-  container.innerHTML = html;
-  document.body.appendChild(container);
-  return { unmount: () => document.body.removeChild(container) };
-};
-
-afterEach(() => {
-  document.body.innerHTML = "";
-});
+const { renderIntoDocument } = require("../../test/utils");
 
 test("enhanced queries can reuse data for any of get/query/find query types", async () => {
   const { unmount } = renderIntoDocument(
