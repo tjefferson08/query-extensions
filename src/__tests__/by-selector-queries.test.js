@@ -6,7 +6,7 @@ const {
   getAllBySelector,
   findBySelector,
   findAllBySelector
-} = require("../query-by-selector");
+} = require("../by-selector-queries");
 
 test("should support all queries by standard css selectors", async () => {
   const { unmount } = renderIntoDocument(
