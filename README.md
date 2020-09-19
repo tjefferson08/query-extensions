@@ -81,7 +81,10 @@ hypothetical test suite) if:
 
 # Usage
 
-There's a handy, pre-built `screen` object available for direct use
+## `screen`
+There's a handy, pre-built `screen` object available for direct use. This is
+probably the most common way you'll interact with `query-extensions`
+
 ```js
 import { screen } from 'query-extensions';
 import { render } from '@testing-library/react';
@@ -98,6 +101,32 @@ test('your actual test', () => {
 })
 ```
 
+## `within`
+Similarly, `query-extensions` provides its own version of the `within` API which
+makes the extended queries available on the resulting query object.
+
+```js
+import { within, screen } from 'query-extensions'; import { render } from '@testing-library/react'; // ... more imports
+
+test('your actual test', () => {
+  render(<YourComponent />);
+
+  // standard within-scoped query
+  expect(
+    within(screen.getByTestId('container-id')).queryByText('Expected text')
+  ).toBeTruthy();
+
+  // equivalent _enhanced_ query! OK it's actually _longer_ but you'll have to
+  // make your own conclusions about tradeoffs ;)
+  const containerConfig = { filter: 'testId', params: ['container-id'] };
+  const targetConfig = { filter: 'text', params: ['Expected text'] };
+  expect(
+    within(screen.get(containerConfig)).query(targetConfig)
+  ).toBeTruthy();
+})
+```
+
+## `enhanceQueries`
 You can also enhance any query objects you like using `enhanceQueries`
 
 ```js
@@ -115,4 +144,37 @@ test('your actual test', () => {
   const enhanced = enhanceQueries(queries);
   expect(enhanced.query({ filter: 'text', params: ['Expected text'] }).toBeTruthy();
 })
+```
+
+## `queryBySelector` (and the whole *BySelector family)
+OK, you _really_ should do everything in your power to keep your tests following
+the [guiding principles](https://testing-library.com/docs/guiding-principles) of
+@testing-library
+
+*BUT* sometimes your application code is just a bit of a mess and your tests
+really need to drop down and do a standard `querySelector`-style interaction.
+
+This has always been possible with a bit of manual intervention, but
+`query-extensions` offers a simple wrapper for API consistency.
+
+
+```js
+import { render } from '@testing-library/react';
+import { screen } from 'query-extensions';
+// ... more imports
+
+test("sometimes you just have to use a selector", async () => {
+  const { unmount } = render(<YourComponent />);
+
+  // maybe your logo is just a styled div with a background-image, I dunno
+  const logoData = { filter: "selector", params: [".company-logo"] };
+
+  const logo = screen.get(logoData)
+  expect(logo).toHaveStyle({ backgroundImage: '/some/image.png' }) // maybe!?
+
+  unmount();
+
+  expect(screen.query(logoData)).toBeNull();
+});
+
 ```
