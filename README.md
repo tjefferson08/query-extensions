@@ -106,7 +106,9 @@ Similarly, `query-extensions` provides its own version of the `within` API which
 makes the extended queries available on the resulting query object.
 
 ```js
-import { within, screen } from 'query-extensions'; import { render } from '@testing-library/react'; // ... more imports
+import { within, screen } from 'query-extensions';
+import { render } from '@testing-library/react';
+// ... more imports
 
 test('your actual test', () => {
   render(<YourComponent />);
@@ -172,9 +174,14 @@ test("sometimes you just have to use a selector", async () => {
   const logo = screen.get(logoData)
   expect(logo).toHaveStyle({ backgroundImage: '/some/image.png' }) // maybe!?
 
+  // the long-form query API is available as well, of course!
+  const logo2 = screen.getBySelector('.company-logo')
+  expect(logo2).toHaveStyle({ backgroundImage: '/some/image.png' })
+
   unmount();
 
   expect(screen.query(logoData)).toBeNull();
+  expect(screen.queryBySelector('.company-logo')).toBeNull();
 });
 
 ```
