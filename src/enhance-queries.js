@@ -1,9 +1,17 @@
-const capitalize = s => `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+const capitalize = (s) => `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+
+const required = (name) => {
+  throw new TypeError(`${name} parameter is required`);
+};
 
 module.exports = {
-  enhanceQueries: queries => {
-    const buildApiAccessor = api => ({ filter, params = [] } = {}) => {
+  enhanceQueries: (queries) => {
+    const buildApiAccessor = (api) => ({
+      filter = required("filter"),
+      params = [],
+    } = {}) => {
       const fnName = `${api}By${capitalize(filter)}`;
+
       const fn = queries[fnName];
       if (!fn) {
         throw new Error(`Unsupported filter: ${filter}`);
@@ -19,7 +27,7 @@ module.exports = {
       query: buildApiAccessor("query"),
       queryAll: buildApiAccessor("queryAll"),
       find: buildApiAccessor("find"),
-      findAll: buildApiAccessor("findAll")
+      findAll: buildApiAccessor("findAll"),
     };
-  }
+  },
 };

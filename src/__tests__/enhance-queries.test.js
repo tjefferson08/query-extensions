@@ -115,3 +115,14 @@ test("using unsupported filter / API will throw", () => {
     /unsupported filter: unavailable thing/i
   );
 });
+
+test("omitting filter will throw a custom TypeError", () => {
+  const noArgs = () => screen.get();
+  const missingFilter = () => screen.get({});
+
+  expect(noArgs).toThrow(TypeError);
+  expect(missingFilter).toThrow(TypeError);
+
+  expect(noArgs).toThrow(/filter parameter is required/i);
+  expect(missingFilter).toThrow(/filter parameter is required/i);
+});
