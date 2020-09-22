@@ -79,6 +79,52 @@ test("within is extended to return enhanced query bundle", async () => {
   expect(within(screen.get(dialogData)).get(okBtnData)).toBeTruthy();
 });
 
+test("within is accessible via within property of query descriptor", async () => {
+  const { unmount } = renderIntoDocument(
+    `<nav>
+       <button>OK</button>
+       <div role="complementary">
+         <button>Forward</button>
+       </div>
+     </nav>
+     <div role="dialog">
+       <button>OK</button>
+       <div role="complementary">
+         <button>Back</button>
+       </div>
+     </div>`
+  );
+
+  const okBtnData = { filter: "role", params: ["button", { name: "OK" }] };
+  const dialogData = { filter: "role", params: ["dialog"] };
+
+  // querying for OK button should yield two results
+  expect(screen.getAll(okBtnData)).toHaveLength(2);
+
+  // scoping with `within` should limit to single result
+  expect(screen.get({ ...okBtnData, within: dialogData })).toBeTruthy();
+
+  // I guess it can compose/recurse? The button within the complementary div
+  // within the dialog should be the back button
+  const complementaryData = { filter: "role", params: ["complementary"] };
+  const buttonData = { filter: "role", params: ["button"] };
+  const backButton = screen.get({
+    ...buttonData,
+    within: { ...complementaryData, within: dialogData }
+  });
+  expect(backButton.textContent).toEqual("Back");
+
+  // The button within the complementary div within the *nav* should be the
+  // forward button
+  const navData = { filter: "role", params: ["navigation"] };
+  const forwardButton = screen.get({
+    ...buttonData,
+    within: { ...complementaryData, within: navData }
+  });
+  expect(forwardButton.textContent).toEqual("Forward");
+
+});
+
 test("within can also access custom queries with/without higher level API", async () => {
   const { unmount } = renderIntoDocument(
     `<form id="main-form">

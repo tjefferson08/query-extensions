@@ -1,3 +1,5 @@
+const { within: dtlWithin } = require("@testing-library/dom");
+
 const capitalize = (s) => `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
 
 const required = (name) => {
@@ -9,6 +11,7 @@ module.exports = {
     const buildApiAccessor = (api) => ({
       filter = required("filter"),
       params = [],
+      within,
     } = {}) => {
       const fnName = `${api}By${capitalize(filter)}`;
 
@@ -17,7 +20,13 @@ module.exports = {
         throw new Error(`Unsupported filter: ${filter}`);
       }
 
-      return queries[fnName](...params);
+      if (within) {
+        // use the same query descriptor API to fetch the scoping element
+        const scopedElement = buildApiAccessor("get")(within);
+        return dtlWithin(scopedElement)[fnName](...params);
+      } else {
+        return queries[fnName](...params);
+      }
     };
 
     return {
