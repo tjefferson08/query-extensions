@@ -1,4 +1,4 @@
-const renderIntoDocument = html => {
+const renderIntoDocument = (html) => {
   const container = document.createElement("div");
   container.id = "render-container";
   container.innerHTML = html;
@@ -7,5 +7,5 @@ const renderIntoDocument = html => {
 };
 
 module.exports = {
-  renderIntoDocument
+  renderIntoDocument,
 };

@@ -7,7 +7,7 @@ const getMissingError = (c, selector) =>
   `Unable to find an element with the selector text: ${selector}`;
 
 const queryAllBySelector = (container, selector) => [
-  ...container.querySelectorAll(selector)
+  ...container.querySelectorAll(selector),
 ];
 
 const [
@@ -15,7 +15,7 @@ const [
   getAllBySelector,
   getBySelector,
   findAllBySelector,
-  findBySelector
+  findBySelector,
 ] = buildQueries(queryAllBySelector, getMultipleError, getMissingError);
 
 module.exports = {
@@ -24,5 +24,5 @@ module.exports = {
   getBySelector,
   getAllBySelector,
   findBySelector,
-  findAllBySelector
+  findAllBySelector,
 };

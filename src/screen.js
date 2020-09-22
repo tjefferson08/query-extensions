@@ -7,6 +7,6 @@ const enhancedScreen = getQueriesForElement(document.body, bySelectorQueries);
 module.exports = {
   screen: enhanceQueries({
     ...screen,
-    ...enhancedScreen
-  })
+    ...enhancedScreen,
+  }),
 };

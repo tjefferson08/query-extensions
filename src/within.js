@@ -7,6 +7,6 @@ module.exports = {
   within: (element, ...rest) =>
     enhanceQueries({
       ...dtlWithin(element, ...rest),
-      ...dtlWithin(element, { ...bySelectorQueries })
-    })
+      ...dtlWithin(element, { ...bySelectorQueries }),
+    }),
 };

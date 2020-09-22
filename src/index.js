@@ -5,5 +5,5 @@ const { enhanceQueries } = require("./enhance-queries");
 module.exports = {
   enhanceQueries,
   screen,
-  within
+  within,
 };
