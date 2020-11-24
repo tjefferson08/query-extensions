@@ -1,10 +1,12 @@
 # query-extensions
+
 Extensions for core @testing-library queries
 
 [Kent & Travis briefly discuss](https://youtu.be/FdO2cphSH9Y?t=772) during one
 of Kent's helpful office hours sessions
 
 # Install
+
 ```sh
 npm install query-extensions
 
@@ -13,7 +15,9 @@ yarn add query-extensions
 ```
 
 # Motivation
+
 Here's the reason this package exists:
+
 ```js
 import { screen } from "query-extensions";
 import { fireEvent } from "@testing-library/react";
@@ -46,7 +50,7 @@ test("the query extensions API can help us write something more readable and mai
     successIcon: { filter: "role", params: ["img", { name: "celebration" }] },
     signUpBtn: { filter: "role", params: ["button", { name: /sign up/i }] },
     emailInput: { filter: "labelText", params: ["Your email"] },
-    loading: { filter: "text", params: ["Loading..."] }
+    loading: { filter: "text", params: ["Loading..."] },
   };
 
   render(<YourComponent />);
@@ -76,12 +80,13 @@ If that (contrived) example doesn't sell you outright, consider a couple of
 "maintenance" scenarios. What happens to each test (or a _much_ bigger, more
 hypothetical test suite) if:
 
-1) A UI element goes from rendering sync to async (or vice versa)
-2) A UI element has a text/markup/label change which requires a different query
+1. A UI element goes from rendering sync to async (or vice versa)
+2. A UI element has a text/markup/label change which requires a different query
 
 # Usage
 
 ## `screen`
+
 There's a handy, pre-built `screen` object available for direct use. This is
 probably the most common way you'll interact with `query-extensions`
 
@@ -102,33 +107,62 @@ test('your actual test', () => {
 ```
 
 ## `within`
+
 Similarly, `query-extensions` provides its own version of the `within` API which
 makes the extended queries available on the resulting query object.
 
 ```js
-import { within, screen } from 'query-extensions';
-import { render } from '@testing-library/react';
+import { within, screen } from "query-extensions";
+import { render } from "@testing-library/react";
 // ... more imports
 
-test('your actual test', () => {
+test("your actual test", () => {
   render(<YourComponent />);
 
   // standard within-scoped query
   expect(
-    within(screen.getByTestId('container-id')).queryByText('Expected text')
+    within(screen.getByTestId("container-id")).queryByText("Expected text")
   ).toBeTruthy();
 
   // equivalent _enhanced_ query! OK it's actually _longer_ but you'll have to
   // make your own conclusions about tradeoffs ;)
-  const containerConfig = { filter: 'testId', params: ['container-id'] };
-  const targetConfig = { filter: 'text', params: ['Expected text'] };
+  const containerConfig = { filter: "testId", params: ["container-id"] };
+  const targetConfig = { filter: "text", params: ["Expected text"] };
+  expect(within(screen.get(containerConfig)).query(targetConfig)).toBeTruthy();
+});
+```
+
+Scoping with `within` is also possible via the `within` property of the query
+descriptor object (this can nest/compose with itself as well as the top-level
+`within` API)
+
+```js
+import { screen } from "query-extensions";
+import { render } from "@testing-library/react";
+// ... more imports
+
+test("your actual test", () => {
+  render(<YourComponent />);
+
+  // standard within-scoped query
   expect(
-    within(screen.get(containerConfig)).query(targetConfig)
+    within(screen.getByTestId("container-id")).queryByText("Expected text")
   ).toBeTruthy();
-})
+
+  // equivalent _enhanced_ query!
+  const containerConfig = { filter: "testId", params: ["container-id"] };
+  expect(
+    query({
+      filter: "text",
+      params: ["Expected text"],
+      within: containerConfig,
+    })
+  ).toBeTruthy();
+});
 ```
 
 ## `enhanceQueries`
+
 You can also enhance any query objects you like using `enhanceQueries`
 
 ```js
@@ -148,21 +182,21 @@ test('your actual test', () => {
 })
 ```
 
-## `queryBySelector` (and the whole *BySelector family)
+## `queryBySelector` (and the whole \*BySelector family)
+
 OK, you _really_ should do everything in your power to keep your tests following
 the [guiding principles](https://testing-library.com/docs/guiding-principles) of
 @testing-library
 
-*BUT* sometimes your application code is just a bit of a mess and your tests
+_BUT_ sometimes your application code is just a bit of a mess and your tests
 really need to drop down and do a standard `querySelector`-style interaction.
 
 This has always been possible with a bit of manual intervention, but
 `query-extensions` offers a simple wrapper for API consistency.
 
-
 ```js
-import { render } from '@testing-library/react';
-import { screen } from 'query-extensions';
+import { render } from "@testing-library/react";
+import { screen } from "query-extensions";
 // ... more imports
 
 test("sometimes you just have to use a selector", async () => {
@@ -171,17 +205,16 @@ test("sometimes you just have to use a selector", async () => {
   // maybe your logo is just a styled div with a background-image, I dunno
   const logoData = { filter: "selector", params: [".company-logo"] };
 
-  const logo = screen.get(logoData)
-  expect(logo).toHaveStyle({ backgroundImage: '/some/image.png' }) // maybe!?
+  const logo = screen.get(logoData);
+  expect(logo).toHaveStyle({ backgroundImage: "/some/image.png" }); // maybe!?
 
   // the long-form query API is available as well, of course!
-  const logo2 = screen.getBySelector('.company-logo')
-  expect(logo2).toHaveStyle({ backgroundImage: '/some/image.png' })
+  const logo2 = screen.getBySelector(".company-logo");
+  expect(logo2).toHaveStyle({ backgroundImage: "/some/image.png" });
 
   unmount();
 
   expect(screen.query(logoData)).toBeNull();
-  expect(screen.queryBySelector('.company-logo')).toBeNull();
+  expect(screen.queryBySelector(".company-logo")).toBeNull();
 });
-
 ```
