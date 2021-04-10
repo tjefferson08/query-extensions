@@ -1,12 +1,12 @@
-const { getQueriesForElement, screen } = require("@testing-library/dom");
-const { enhanceQueries } = require("./enhance-queries");
-const bySelectorQueries = require("./by-selector-queries");
+import dtl from "@testing-library/dom";
+import { enhanceQueries } from "./enhance-queries.js";
+import * as bySelectorQueries from "./by-selector-queries.js";
+
+const { getQueriesForElement, screen: dtlScreen } = dtl;
 
 const enhancedScreen = getQueriesForElement(document.body, bySelectorQueries);
 
-module.exports = {
-  screen: enhanceQueries({
-    ...screen,
-    ...enhancedScreen,
-  }),
-};
+export const screen = enhanceQueries({
+  ...dtlScreen,
+  ...enhancedScreen,
+});

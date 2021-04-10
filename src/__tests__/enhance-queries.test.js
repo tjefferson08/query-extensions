@@ -1,5 +1,5 @@
-const { screen, within } = require("../index");
-const { renderIntoDocument } = require("../../test/utils");
+import { screen, within } from "../index.js";
+import { renderIntoDocument } from "../../test/utils.js";
 
 test("enhanced queries can reuse data for any of get/query/find query types", async () => {
   const { unmount } = renderIntoDocument(
@@ -110,7 +110,7 @@ test("within is accessible via within property of query descriptor", async () =>
   const buttonData = { filter: "role", params: ["button"] };
   const backButton = screen.get({
     ...buttonData,
-    within: { ...complementaryData, within: dialogData }
+    within: { ...complementaryData, within: dialogData },
   });
   expect(backButton.textContent).toEqual("Back");
 
@@ -119,10 +119,9 @@ test("within is accessible via within property of query descriptor", async () =>
   const navData = { filter: "role", params: ["navigation"] };
   const forwardButton = screen.get({
     ...buttonData,
-    within: { ...complementaryData, within: navData }
+    within: { ...complementaryData, within: navData },
   });
   expect(forwardButton.textContent).toEqual("Forward");
-
 });
 
 test("within can also access custom queries with/without higher level API", async () => {

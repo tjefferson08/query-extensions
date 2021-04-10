@@ -1,6 +1,6 @@
-const { within } = require("../within");
-const { screen } = require("../within");
-const { renderIntoDocument } = require("../../test/utils");
+import { within } from "../within.js";
+import { screen } from "../screen.js";
+import { renderIntoDocument } from "../../test/utils.js";
 
 function toHaveDescriptor(element, descriptor) {
   if (this.isNot) {

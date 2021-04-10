@@ -1,12 +1,12 @@
-const { renderIntoDocument } = require("../../test/utils");
-const {
+import { renderIntoDocument } from "../../test/utils.js";
+import {
   queryBySelector,
   queryAllBySelector,
   getBySelector,
   getAllBySelector,
   findBySelector,
   findAllBySelector
-} = require("../by-selector-queries");
+} from "../by-selector-queries.js";
 
 test("should support all queries by standard css selectors", async () => {
   const { unmount } = renderIntoDocument(

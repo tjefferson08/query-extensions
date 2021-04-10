@@ -1,4 +1,5 @@
-const { buildQueries } = require("@testing-library/dom");
+import dtl from "@testing-library/dom";
+const { buildQueries } = dtl;
 
 const getMultipleError = (c, selector) =>
   `Found multiple elements with the selector text: ${selector}`;
@@ -18,7 +19,7 @@ const [
   findBySelector,
 ] = buildQueries(queryAllBySelector, getMultipleError, getMissingError);
 
-module.exports = {
+export {
   queryBySelector,
   queryAllBySelector,
   getBySelector,
